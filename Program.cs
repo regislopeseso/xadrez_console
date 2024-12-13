@@ -1,6 +1,5 @@
 ﻿using Boards;
-
-
+using Chess;
 
 namespace xadrez_console
 {
@@ -8,9 +7,14 @@ namespace xadrez_console
     {
         public static void Main(string[] args)
         {
-            var chessBoard = new Board(8, 8);
+            var board= new Board(8, 8);
             
-            Screen.DisplayBoard(chessBoard);
+
+            board.PlaceAPiece(new Rook(board, Color.Black), new Position(0, 0));
+            board.PlaceAPiece(new Rook(board, Color.Black), new Position(1, 3));
+            board.PlaceAPiece(new King(board, Color.Black), new Position(2, 4));
+            
+            Screen.DisplayBoard(board);
 
             Console.ReadLine();
 

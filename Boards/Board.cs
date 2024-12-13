@@ -23,5 +23,10 @@ namespace Boards
         {
             return pieces[line, column];
         }
+
+        public void PlaceAPiece(Piece p, Position pos)
+        {
+            pieces[pos.line,pos.column] = p;
+        }
     }
 }
