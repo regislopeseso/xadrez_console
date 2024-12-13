@@ -1,4 +1,4 @@
-﻿using tabuleiro;
+﻿using Boards;
 
 
 
@@ -8,12 +8,9 @@ namespace xadrez_console
     {
         public static void Main(string[] args)
         {
-            Tabuleiro tab = new Tabuleiro(8,8);
+            var chessBoard = new Board(8, 8);
             
-            
-            Posicao P;
-            P = new Posicao(3, 4);
-            Console.WriteLine(P);
+            Screen.DisplayBoard(chessBoard);
 
             Console.ReadLine();
 

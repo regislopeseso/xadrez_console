@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace tabuleiro
+namespace Boards
 {
-    public enum Cor
+    public enum Color
     {
-        Branca,
-        Preta,
-        Vermelha,
-        Amarela,
-        Verde,
+        White,
+        Black,
+        Red,
+        Yellow,
+        Green,
     }
 }
