@@ -20,12 +20,12 @@ namespace Chess
 
         public Position ConvertPosition()
         {
-            return new Position(8-line, column - 'a');
+            return new Position(8 - line, column - 'a');
         }
 
         public override string ToString()
         {
-            return $"{this.column}{this.line}"; 
+            return $"{this.column}{this.line}";
         }
 
 
