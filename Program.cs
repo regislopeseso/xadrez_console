@@ -9,14 +9,20 @@ namespace xadrez_console
         {
             try
             {
-                var board = new Board(8, 8);
+                //var board = new Board(8, 8);
 
 
-                board.PlaceAPiece(new Rook(board, Color.Black), new Position(0, 0));
-                board.PlaceAPiece(new Rook(board, Color.Black), new Position(1, 9));
-                board.PlaceAPiece(new King(board, Color.Black), new Position(2, 4));
+                //board.PlaceAPiece(new Rook(board, Color.Black), new Position(0, 0));
+                //board.PlaceAPiece(new Rook(board, Color.Black), new Position(1, 3));
+                //board.PlaceAPiece(new King(board, Color.Black), new Position(2, 4));
 
-                Screen.DisplayBoard(board);
+                //Screen.DisplayBoard(board);
+
+                ChessPosition pos = new ChessPosition('a',1);
+
+                Console.WriteLine(pos);
+
+                Console.WriteLine(pos.ConvertPosition());
 
 
             }
