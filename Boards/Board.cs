@@ -16,17 +16,46 @@ namespace Boards
         {
             this.lines = lines;
             this.columns = columns;
-            pieces = new Piece[lines, columns];
+            this.pieces = new Piece[lines, columns];
         }
 
         public Piece piece(int line, int column)
         {
-            return pieces[line, column];
+            return this.pieces[line, column];
         }
 
+        public Piece piece(Position pos)
+        {
+            return this.pieces[pos.line, pos.column];
+        }
+
+        public bool ExistPiece(Position pos)
+        {
+            validatePosition(pos);
+            return piece(pos) != null;
+        }
         public void PlaceAPiece(Piece p, Position pos)
         {
-            pieces[pos.line,pos.column] = p;
+            if (ExistPiece(pos) == true) 
+            {
+                throw new BoardException("There is already a piece on this position!");
+            }
+            this.pieces[pos.line,pos.column] = p;
         }
+
+        public bool PositionIsValid(Position pos)
+        {
+            if (pos.line < 0 || pos.line >= this.lines || pos.column < 0 || pos.column >= this.columns) return false;
+            else return true;
+        }
+
+        public void validatePosition(Position pos)
+        {
+            if (PositionIsValid(pos) != true)
+            {
+                throw new BoardException("Invalid position!");
+            }
+        }
+
     }
 }

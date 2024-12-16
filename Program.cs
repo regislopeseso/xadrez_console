@@ -7,17 +7,25 @@ namespace xadrez_console
     {
         public static void Main(string[] args)
         {
-            var board= new Board(8, 8);
-            
+            try
+            {
+                var board = new Board(8, 8);
 
-            board.PlaceAPiece(new Rook(board, Color.Black), new Position(0, 0));
-            board.PlaceAPiece(new Rook(board, Color.Black), new Position(1, 3));
-            board.PlaceAPiece(new King(board, Color.Black), new Position(2, 4));
-            
-            Screen.DisplayBoard(board);
 
+                board.PlaceAPiece(new Rook(board, Color.Black), new Position(0, 0));
+                board.PlaceAPiece(new Rook(board, Color.Black), new Position(1, 9));
+                board.PlaceAPiece(new King(board, Color.Black), new Position(2, 4));
+
+                Screen.DisplayBoard(board);
+
+
+            }
+            catch (BoardException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
             Console.ReadLine();
-
         }
     }
 }
