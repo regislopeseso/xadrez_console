@@ -11,7 +11,7 @@ namespace Chess
 
         public override string ToString()
         {
-            return "T";
+            return "k";
         }
     }
 }

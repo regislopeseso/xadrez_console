@@ -20,5 +20,10 @@ namespace Boards
             this.color = color;
             this.nMoves = 0;
         }
+        
+        public void nMovesUpdate()
+        {
+            this.nMoves ++; 
+        }
     }
 }

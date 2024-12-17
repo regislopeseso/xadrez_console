@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Boards;
+using Chess;
 
 namespace xadrez_console
 {
@@ -35,15 +36,24 @@ namespace xadrez_console
         {
             if(piece.color == Color.White)
             {
-                Console.Write(piece);
+                Console.Write($"{piece} ");
             }
             else if(piece.color == Color.Black)
             {
                 ConsoleColor aux = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write(piece);
+                Console.Write($"{piece} ");
                 Console.ForegroundColor = aux;
             }
+        }
+
+        public static ChessPosition ReadChessPosition()
+        {
+            string s = Console.ReadLine();
+            char column = s[0];
+            int line = int.Parse(s[1] + "");
+
+            return new ChessPosition(column, line);
         }
 
     }

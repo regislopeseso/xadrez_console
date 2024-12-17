@@ -9,22 +9,24 @@ namespace xadrez_console
         {
             try
             {
-                var board = new Board(8, 8);
+                ChessMatch match = new ChessMatch();
+                while (match.IsFinished != true)
+                {
+                    Console.Clear();
+                    Screen.DisplayBoard(match.Board);
+                    Console.WriteLine();
+                    Console.Write("Origin: ");
+                    Position origin = Screen.ReadChessPosition().ConvertPosition();
+                    Console.Write("Target: ");
+                    Position target = Screen.ReadChessPosition().ConvertPosition();
+
+                    match.MovePiece(origin, target);
+                }
 
 
-                board.PlaceAPiece(new Rook(board, Color.Black), new Position(0, 0));
-                board.PlaceAPiece(new Rook(board, Color.Black), new Position(1, 3));
-                board.PlaceAPiece(new King(board, Color.Black), new Position(2, 4));
 
-                board.PlaceAPiece(new Rook(board, Color.White), new Position(3, 5));
 
-                Screen.DisplayBoard(board);
 
-                //ChessPosition pos = new ChessPosition('a',1);
-
-                //Console.WriteLine(pos);
-
-                //Console.WriteLine(pos.ConvertPosition());
 
 
             }
@@ -32,7 +34,7 @@ namespace xadrez_console
             {
                 Console.WriteLine(e.Message);
             }
-            
+
             Console.ReadLine();
         }
     }

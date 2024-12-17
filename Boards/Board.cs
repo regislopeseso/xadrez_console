@@ -34,13 +34,28 @@ namespace Boards
             validatePosition(pos);
             return piece(pos) != null;
         }
-        public void PlaceAPiece(Piece p, Position pos)
+        public void PlacePiece(Piece p, Position pos)
         {
             if (ExistPiece(pos) == true) 
             {
                 throw new BoardException("There is already a piece on this position!");
             }
             this.pieces[pos.line,pos.column] = p;
+        }
+
+        public Piece RemovePiece(Position pos)
+        {
+            if (piece(pos) == null)
+            {
+                return null;
+            }
+            else
+            {
+                Piece aux = piece(pos);
+                aux.position = null;
+                pieces[pos.line, pos.column] = null;
+                return aux;
+            }
         }
 
         public bool PositionIsValid(Position pos)
