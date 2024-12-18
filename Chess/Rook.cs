@@ -13,5 +13,64 @@ namespace Chess
         {
             return "R";
         }
+
+        private bool IsSpotFree(Position pos)
+        {
+            Piece p = Board.Piece(pos);
+            return p == null || p.Color != this.Color;
+        }
+        public override bool[,] PossibleMoves()
+        {
+            bool[,] mat = new bool[Board.Lines, Board.Columns];
+
+            Position pos = new Position(0, 0);
+            
+            //North direction
+            pos.DefineValues(Position.Line - 1, Position.Column);
+            while (Board.PositionIsValid(pos) && IsSpotFree(pos))
+            {
+                mat[pos.Line, pos.Column] = true;
+                if (Board.Piece(pos) != null && Board.Piece(pos).Color != Color)
+                {
+                    break;
+                }
+                pos.Line = pos.Line - 1;
+            }
+            //South direction
+            pos.DefineValues(Position.Line + 1, Position.Column);
+            while (Board.PositionIsValid(pos) && IsSpotFree(pos))
+            {
+                mat[pos.Line, pos.Column] = true;
+                if (Board.Piece(pos) != null && Board.Piece(pos).Color != Color)
+                {
+                    break;
+                }
+                pos.Line = pos.Line + 1;
+            }
+            //East direction
+            pos.DefineValues(Position.Line, Position.Column + 1);
+            while (Board.PositionIsValid(pos) && IsSpotFree(pos))
+            {
+                mat[pos.Line, pos.Column] = true;
+                if (Board.Piece(pos) != null && Board.Piece(pos).Color != Color)
+                {
+                    break;
+                }
+                pos.Column = pos.Column + 1;
+            }
+            //West direction
+            pos.DefineValues(Position.Line, Position.Column - 1);
+            while (Board.PositionIsValid(pos) && IsSpotFree(pos))
+            {
+                mat[pos.Line, pos.Column] = true;
+                if (Board.Piece(pos) != null && Board.Piece(pos).Color != Color)
+                {
+                    break;
+                }
+                pos.Column = pos.Column - 1;
+            }
+
+            return mat;
+        }
     }
 }

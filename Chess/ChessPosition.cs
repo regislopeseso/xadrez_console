@@ -27,9 +27,5 @@ namespace Chess
         {
             return $"{this.Column}{this.Line}";
         }
-
-
-
-
     }
 }

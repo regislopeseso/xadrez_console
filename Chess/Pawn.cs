@@ -13,5 +13,10 @@ namespace Chess
         {
             return "P";
         }
+
+        public override bool[,] PossibleMoves()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

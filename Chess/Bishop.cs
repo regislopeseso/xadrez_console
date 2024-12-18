@@ -9,9 +9,14 @@ namespace Chess
         {
         }
 
+
         public override string ToString()
         {
             return "T";
+        }
+        public override bool[,] PossibleMoves()
+        {
+            throw new NotImplementedException();
         }
     }
 }

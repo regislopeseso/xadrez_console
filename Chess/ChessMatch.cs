@@ -5,19 +5,35 @@ namespace Chess
     class ChessMatch
     {
         public Board Board { get; private set; }
-        private int Turn;
-        private Color CurrentPlayer;
+        public int Turn { get; private set; }
+        public Color CurrentPlayer { get; private set; }
         public bool IsFinished { get; private set; }
 
         public ChessMatch()
         {
             this.Board = new Board(8, 8);
             this.Turn = 1;
-            CurrentPlayer = Color.White;
+            this.CurrentPlayer = Color.White;
             this.IsFinished = false;
             PlacePieces();
         }
-
+        public void ExecuteMove(Position origin, Position target)
+        {
+            MovePiece(origin, target);
+            this.Turn++;
+            ChangePlayer();
+        }
+        private void ChangePlayer()
+        {
+            if (this.CurrentPlayer == Color.White)
+            {
+                this.CurrentPlayer = Color.Black;
+            }
+            else
+            {
+                this.CurrentPlayer = Color.White;
+            }
+        }
         public void MovePiece(Position origin, Position target)
         {
             Piece p = Board.RemovePiece(origin);
@@ -25,7 +41,6 @@ namespace Chess
             Piece pieceCaptured = Board.RemovePiece(target);
             Board.PlacePiece(p, target);
         }
-
         public void PlacePieces()
         {
             //Placing all white pieces for a new match. . .

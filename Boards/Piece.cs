@@ -6,24 +6,26 @@ using System.Threading.Tasks;
 
 namespace Boards
 {
-    public class Piece
+    public abstract class Piece
     {
-        public Position position { get; set; }
-        public Color color { get; protected set; }
-        public int nMoves { get; protected set;}
-        public Board board { get; protected set; }
+        public Position Position { get; set; }
+        public Color Color { get; protected set; }
+        public int QtyMoves { get; protected set;}
+        public Board Board { get; protected set; }
 
         public Piece(Board board, Color color)
         {
-            this.position = null;
-            this.board = board;
-            this.color = color;
-            this.nMoves = 0;
+            this.Position = null;
+            this.Board = board;
+            this.Color = color;
+            this.QtyMoves = 0;
         }
         
         public void nMovesUpdate()
         {
-            this.nMoves ++; 
+            this.QtyMoves++; 
         }
+
+        public abstract bool[,] PossibleMoves();
     }
 }

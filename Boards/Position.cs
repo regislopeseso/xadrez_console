@@ -3,20 +3,25 @@ namespace Boards
 {
     public class Position
     {
-        public int line { get; set; }
-        public int column { get; set; }
+        public int Line { get; set; }
+        public int Column { get; set; }
 
-        public Position(int lines, int columns)
+        public Position(int line, int column)
         {
-            this.line = lines;
-            this.column = columns;   
+            this.Line = line;
+            this.Column = column;   
+        }
+
+        public void DefineValues(int line, int column)
+        {
+            this.Line = line;
+            this.Column = column;
         }
 
         public override string ToString()
         {
-            return $"Position (line;column) = ({this.line};{this.column})";
+            return $"Position (line;column) = ({this.Line};{this.Column})";
         }
-
     }
 }
  
