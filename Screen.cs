@@ -5,16 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Boards;
 using Chess;
+using Microsoft.Win32.SafeHandles;
 
 namespace xadrez_console
 {
     public class Screen
     {
+        
 
         public static void DisplayBoard(Board board)
         {
+
             for (int i = 0; i < board.Lines; i++)
             {
+                Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.Write($"{8 - i}  ");
                 for (int j = 0; j < board.Columns; j++)
                 {
@@ -22,16 +26,22 @@ namespace xadrez_console
                 }
                 Console.WriteLine();
             }
+            Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("   a b c d e f g h");
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
-        public static void DisplayBoard(Board board, bool[,] possibleMoves)
+        
+
+        public static void DisplayBoard(Board board, bool[,] possibleMoves, Position pos)
         {
             ConsoleColor originalColor = Console.BackgroundColor;
             ConsoleColor changedColor = ConsoleColor.DarkGray;
 
+
             for (int i = 0; i < board.Lines; i++)
             {
+                Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.Write($"{8 - i}  ");
                 for (int j = 0; j < board.Columns; j++)
                 {
@@ -39,17 +49,22 @@ namespace xadrez_console
                     {
                         Console.BackgroundColor = changedColor;
                     }
-                    else 
+                    else
                     {
                         Console.BackgroundColor = originalColor;
+                    }
+                    if (pos.Line == i && pos.Column == j)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Red;
                     }
                     printPiece(board.Piece(i, j));
                     Console.BackgroundColor = originalColor;
                 }
                 Console.WriteLine();
             }
+            Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("   a b c d e f g h");
-            Console.BackgroundColor = originalColor;
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public static ChessPosition ReadChessPosition()
@@ -65,6 +80,7 @@ namespace xadrez_console
         {
             if (piece == null)
             {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write("- ");
             }
             else
@@ -72,7 +88,9 @@ namespace xadrez_console
 
                 if (piece.Color == Color.White)
                 {
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.Write($"{piece}");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                 }
                 else
                 {
@@ -83,6 +101,6 @@ namespace xadrez_console
                 }
                 Console.Write(" ");
             }
-        }       
+        }
     }
 }

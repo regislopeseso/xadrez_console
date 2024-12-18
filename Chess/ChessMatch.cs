@@ -17,11 +17,35 @@ namespace Chess
             this.IsFinished = false;
             PlacePieces();
         }
-        public void ExecuteMove(Position origin, Position target)
+        public void Play(Position origin, Position target) //"realizaJogada"
         {
-            MovePiece(origin, target);
+            ExecuteMove(origin, target);
             this.Turn++;
             ChangePlayer();
+        }
+        public void ValidateOriginPosition(Position pos)
+        {
+            if (Board.Piece(pos) == null)
+            {
+                throw new BoardException("There's ono Piece at the origin's position!");
+            }
+
+            if (CurrentPlayer != Board.Piece(pos).Color)
+            {
+                throw new BoardException("The chosen Piece does not belong to you!");
+            }
+
+            if (Board.Piece(pos).AreTherePossibleMoves() == false)
+            {
+                throw new BoardException("There are no possible moves for the chosen Piece!");
+            }
+        }
+        public void ValidateTargetPosition(Position origin, Position target)
+        {
+            if (Board.Piece(origin).canMoveTo(target) == false)
+            {
+                throw new BoardException("Invalid target position!");
+            }
         }
         private void ChangePlayer()
         {
@@ -34,7 +58,7 @@ namespace Chess
                 this.CurrentPlayer = Color.White;
             }
         }
-        public void MovePiece(Position origin, Position target)
+        public void ExecuteMove(Position origin, Position target)
         {
             Piece p = Board.RemovePiece(origin);
             p.nMovesUpdate();
@@ -44,7 +68,7 @@ namespace Chess
         public void PlacePieces()
         {
             //Placing all white pieces for a new match. . .
-            this.Board.PlacePiece(new Rook(Board, Color.White), new ChessPosition('a', 1).ConvertPosition());
+            this.Board.PlacePiece(new Rook(Board, Color.White), new ChessPosition('a', 3).ConvertPosition());
             this.Board.PlacePiece(new Knight(Board, Color.White), new ChessPosition('b', 1).ConvertPosition());
             this.Board.PlacePiece(new Bishop(Board, Color.White), new ChessPosition('c', 1).ConvertPosition());
             this.Board.PlacePiece(new Queen(Board, Color.White), new ChessPosition('d', 1).ConvertPosition());
@@ -68,7 +92,7 @@ namespace Chess
             this.Board.PlacePiece(new Bishop(Board, Color.Black), new ChessPosition('c', 8).ConvertPosition());
             this.Board.PlacePiece(new Queen(Board, Color.Black), new ChessPosition('d', 8).ConvertPosition());
             this.Board.PlacePiece(new King(Board, Color.Black), new ChessPosition('e', 8).ConvertPosition());
-            this.Board.PlacePiece(new Bishop(Board, Color.Black ), new ChessPosition('f', 8).ConvertPosition());
+            this.Board.PlacePiece(new Bishop(Board, Color.Black), new ChessPosition('f', 8).ConvertPosition());
             this.Board.PlacePiece(new Knight(Board, Color.Black), new ChessPosition('g', 8).ConvertPosition());
             this.Board.PlacePiece(new Rook(Board, Color.Black), new ChessPosition('h', 8).ConvertPosition());
 

@@ -12,27 +12,40 @@ namespace xadrez_console
                 ChessMatch match = new ChessMatch();
                 while (match.IsFinished != true)
                 {
-                    Console.Clear();
+                    try
+                    {
 
-                    Screen.DisplayBoard(match.Board);        
 
-                    Console.WriteLine($"\nTurn: {match.Turn}");
-                    Console.WriteLine($"Waiting for {match.CurrentPlayer} Player to play");         
+                        Console.Clear();
 
-                    Console.Write("\nOrigin: ");
-                    var originInput = Screen.ReadChessPosition();
-                    Position origin = originInput.ConvertPosition();
+                        Screen.DisplayBoard(match.Board);
 
-                    bool[,] possibleMoves = match.Board.Piece(origin).PossibleMoves();
+                        Console.WriteLine($"\nTurn: {match.Turn}");
+                        Console.WriteLine($"Waiting for {match.CurrentPlayer} Player to play");
 
-                    Console.Clear();
+                        Console.Write("\nOrigin: ");
+                        var originInput = Screen.ReadChessPosition();
+                        Position origin = originInput.ConvertPosition();
+                        match.ValidateOriginPosition(origin);
 
-                    Screen.DisplayBoard(match.Board, possibleMoves);
-                    Console.WriteLine($"\nOrigin: {originInput}");
-                    Console.Write("Target: ");
-                    Position target = Screen.ReadChessPosition().ConvertPosition();
 
-                    match.ExecuteMove(origin,target);
+                        bool[,] possibleMoves = match.Board.Piece(origin).PossibleMoves();
+
+                        Console.Clear();
+
+                        Screen.DisplayBoard(match.Board, possibleMoves, origin);
+                        Console.WriteLine($"\nOrigin: {originInput}");
+                        Console.Write("Target: ");
+                        Position target = Screen.ReadChessPosition().ConvertPosition();
+                        match.ValidateTargetPosition(origin, target);
+
+                        match.Play(origin, target);
+                    }
+                    catch (BoardException e)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.ReadLine();
+                    }
                 }
             }
             catch (BoardException e)
