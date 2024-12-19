@@ -14,20 +14,13 @@ namespace xadrez_console
                 {
                     try
                     {
-
-
                         Console.Clear();
-
-                        Screen.DisplayBoard(match.Board);
-
-                        Console.WriteLine($"\nTurn: {match.Turn}");
-                        Console.WriteLine($"Waiting for {match.CurrentPlayer} Player to play");
+                        Screen.ShowMatch(match);  
 
                         Console.Write("\nOrigin: ");
                         var originInput = Screen.ReadChessPosition();
                         Position origin = originInput.ConvertPosition();
                         match.ValidateOriginPosition(origin);
-
 
                         bool[,] possibleMoves = match.Board.Piece(origin).PossibleMoves();
 

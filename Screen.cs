@@ -11,14 +11,56 @@ namespace xadrez_console
 {
     public class Screen
     {
-        
+
+        public static void ShowMatch(ChessMatch match)
+        {
+            Console.BackgroundColor = ConsoleColor.White; //#
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.Clear();
+
+            DisplayBoard(match.Board);
+            Console.WriteLine();
+            ShowCapturedPieces(match);
+            Console.WriteLine();
+            //Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"\nTurn: {match.Turn}");
+            Console.WriteLine($"Waiting for {match.CurrentPlayer} Player to play");
+        }
+
+        public static void ShowCapturedPieces(ChessMatch match)
+        {
+            Console.WriteLine("Captured pieces: ");
+
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.Write($"Red Player ({match.CapturedPieces(Color.Black).Count}): ");
+            Console.Write("[");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            PrintGrouping(match.CapturedPieces(Color.Black));
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("]");
+            Console.ForegroundColor = ConsoleColor.Black;
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write($"Yellow Player ({match.CapturedPieces(Color.White).Count}): ");
+            Console.Write("[");
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            PrintGrouping(match.CapturedPieces(Color.White));
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("]");
+            Console.ForegroundColor = ConsoleColor.Black;
+        }
+
+        public static void PrintGrouping(HashSet<Piece> grouping)
+        {
+            Console.Write($"{String.Join(",", grouping)}");
+        }
 
         public static void DisplayBoard(Board board)
         {
 
             for (int i = 0; i < board.Lines; i++)
             {
-                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.ForegroundColor = ConsoleColor.Black;
                 Console.Write($"{8 - i}  ");
                 for (int j = 0; j < board.Columns; j++)
                 {
@@ -26,45 +68,34 @@ namespace xadrez_console
                 }
                 Console.WriteLine();
             }
-            Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("   a b c d e f g h");
-            Console.ForegroundColor = ConsoleColor.Gray;
         }
-
-        
 
         public static void DisplayBoard(Board board, bool[,] possibleMoves, Position pos)
         {
-            ConsoleColor originalColor = Console.BackgroundColor;
-            ConsoleColor changedColor = ConsoleColor.DarkGray;
-
-
             for (int i = 0; i < board.Lines; i++)
             {
-                Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.Write($"{8 - i}  ");
                 for (int j = 0; j < board.Columns; j++)
                 {
                     if (possibleMoves[i, j] == true)
                     {
-                        Console.BackgroundColor = changedColor;
+                        Console.BackgroundColor = ConsoleColor.Cyan;
                     }
                     else
                     {
-                        Console.BackgroundColor = originalColor;
+                        Console.BackgroundColor = ConsoleColor.White;
                     }
                     if (pos.Line == i && pos.Column == j)
                     {
-                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.BackgroundColor = ConsoleColor.Blue;
                     }
                     printPiece(board.Piece(i, j));
-                    Console.BackgroundColor = originalColor;
                 }
                 Console.WriteLine();
+                Console.BackgroundColor = ConsoleColor.White;
             }
-            Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("   a b c d e f g h");
-            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public static ChessPosition ReadChessPosition()
@@ -75,29 +106,25 @@ namespace xadrez_console
             return new ChessPosition(column, line);
         }
 
-
         public static void printPiece(Piece piece)
         {
             if (piece == null)
             {
-                Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write("- ");
             }
             else
             {
-
                 if (piece.Color == Color.White)
                 {
-                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.Write($"{piece}");
-                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.ForegroundColor = ConsoleColor.Black;
                 }
                 else
                 {
-                    ConsoleColor aux = Console.ForegroundColor;
-                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.Write($"{piece}");
-                    Console.ForegroundColor = aux;
+                    Console.ForegroundColor = ConsoleColor.Black;
                 }
                 Console.Write(" ");
             }
