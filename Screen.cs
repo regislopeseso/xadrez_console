@@ -23,10 +23,18 @@ namespace xadrez_console
             ShowCapturedPieces(match);
             Console.WriteLine();
             Console.WriteLine($"\nTurn: {match.Turn}");
-            Console.WriteLine($"Waiting for {match.CurrentPlayer} Player to play");
-            if(match.Check == true)
+            if (!match.IsFinished)
             {
-                Console.WriteLine($"{match.CurrentPlayer} Player is in CHECK!");
+                Console.WriteLine($"Waiting for {match.CurrentPlayer} Player to play");
+                if (match.Check == true)
+                {
+                    Console.WriteLine($"{match.CurrentPlayer} Player is in CHECK!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("!!! CHECKMATE !!!");
+                Console.WriteLine($"{match.CurrentPlayer} PLAYER HAS WON!");
             }
         }
 

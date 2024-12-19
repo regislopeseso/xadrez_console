@@ -1,4 +1,6 @@
 ﻿using Boards;
+using System.ComponentModel.DataAnnotations;
+using System.Numerics;
 
 namespace Chess
 {
@@ -41,9 +43,9 @@ namespace Chess
             p.DecreaseCountMoves();
             if (pieceCaptured != null)
             {
-               Board.PlacePiece(p, origin);
-               
-               Captured.Remove(pieceCaptured);
+                Board.PlacePiece(p, origin);
+
+                Captured.Remove(pieceCaptured);
             }
             Board.PlacePiece(p, origin);
 
@@ -52,13 +54,13 @@ namespace Chess
         {
             Piece pieceCaptured = ExecuteMove(origin, target);
 
-            if(IsInCheck(CurrentPlayer) == true)
+            if (IsInCheck(CurrentPlayer) == true)
             {
-                UndoMove(origin, target,  pieceCaptured);
+                UndoMove(origin, target, pieceCaptured);
                 throw new BoardException("You are not allowed to place yourself into check!");
             }
-       
-            if( IsInCheck(Opponent(CurrentPlayer) ) == true)
+
+            if (IsInCheck(Opponent(CurrentPlayer)) == true)
             {
                 this.Check = true;
             }
@@ -67,9 +69,18 @@ namespace Chess
                 this.Check = false;
             }
 
-            this.Turn++;
-            ChangePlayer();
+            if (VerifyCheckMate(Opponent(CurrentPlayer)))
+            {
+                this.IsFinished = true;
+            }
+            else
+            {
+                this.Turn++;
+                ChangePlayer();
+            }
         }
+
+        
         public void ValidateOriginPosition(Position pos)
         {
             if (Board.Piece(pos) == null)
@@ -145,7 +156,7 @@ namespace Chess
         private Piece WhichKing(Color color)
         {
             foreach (var piece in PiecesInPlay(color))
-            {         
+            {
                 if (piece is King)
                 {
                     return piece;
@@ -172,6 +183,39 @@ namespace Chess
             }
             return false;
         }
+
+        public bool VerifyCheckMate(Color color)
+        {
+            if (!IsInCheck(color))
+            {
+                return false;
+            }
+            foreach (var x in PiecesInPlay(color))
+            {
+                bool[,] mat = x.PossibleMoves();
+                for (int i = 0; i < Board.Lines; i++)
+                {
+                    for (int j = 0; j < Board.Columns; j++)
+                    {
+                        if (mat[i, j])
+                        {
+
+                            Position origin = x.Position;
+                            Position target = new Position(i, j);
+                            Piece slaughteredPiece = ExecuteMove(origin, target);
+                            bool checkIFcheck = IsInCheck(color);
+                            UndoMove(origin, target, slaughteredPiece);
+                            if (!checkIFcheck)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
         public void PlaceNewPiece(char column, int line, Piece piece)
         {
             Board.PlacePiece(piece, new ChessPosition(column, line).ConvertPosition());
@@ -218,6 +262,8 @@ namespace Chess
             PlaceNewPiece('g', 7, new Pawn(Board, Color.Yellow));
             PlaceNewPiece('h', 7, new Pawn(Board, Color.Yellow));
             */
+
+            /*
             PlaceNewPiece('c', 1, new Rook(Board, Color.Red));
             PlaceNewPiece('c', 2, new Rook(Board, Color.Red));
             PlaceNewPiece('d', 2, new Rook(Board, Color.Red));
@@ -231,6 +277,19 @@ namespace Chess
             PlaceNewPiece('e', 7, new Rook(Board, Color.Yellow));
             PlaceNewPiece('e', 8, new Rook(Board, Color.Yellow));
             PlaceNewPiece('d', 8, new King(Board, Color.Yellow));
+            */
+
+
+            PlaceNewPiece('c', 1, new Rook(Board, Color.Red));
+            PlaceNewPiece('d', 1, new King(Board, Color.Red));
+            PlaceNewPiece('h', 7, new Rook(Board, Color.Red));
+
+            PlaceNewPiece('a', 8, new King(Board, Color.Yellow));
+            PlaceNewPiece('b', 8, new Rook(Board, Color.Yellow));
+
+
+
+
         }
     }
 }
