@@ -14,7 +14,7 @@ namespace xadrez_console
 
         public static void ShowMatch(ChessMatch match)
         {
-            Console.BackgroundColor = ConsoleColor.White; //#
+            Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.Clear();
 
@@ -22,9 +22,12 @@ namespace xadrez_console
             Console.WriteLine();
             ShowCapturedPieces(match);
             Console.WriteLine();
-            //Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine($"\nTurn: {match.Turn}");
             Console.WriteLine($"Waiting for {match.CurrentPlayer} Player to play");
+            if(match.Check == true)
+            {
+                Console.WriteLine($"{match.CurrentPlayer} Player is in CHECK!");
+            }
         }
 
         public static void ShowCapturedPieces(ChessMatch match)
@@ -32,19 +35,19 @@ namespace xadrez_console
             Console.WriteLine("Captured pieces: ");
 
             Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.Write($"Red Player ({match.CapturedPieces(Color.Black).Count}): ");
+            Console.Write($"Red Player ({match.CapturedPieces(Color.Yellow).Count}): ");
             Console.Write("[");
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            PrintGrouping(match.CapturedPieces(Color.Black));
+            PrintGrouping(match.CapturedPieces(Color.Yellow));
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine("]");
             Console.ForegroundColor = ConsoleColor.Black;
 
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.Write($"Yellow Player ({match.CapturedPieces(Color.White).Count}): ");
+            Console.Write($"Yellow Player ({match.CapturedPieces(Color.Red).Count}): ");
             Console.Write("[");
             Console.ForegroundColor = ConsoleColor.DarkRed;
-            PrintGrouping(match.CapturedPieces(Color.White));
+            PrintGrouping(match.CapturedPieces(Color.Red));
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("]");
             Console.ForegroundColor = ConsoleColor.Black;
@@ -114,7 +117,7 @@ namespace xadrez_console
             }
             else
             {
-                if (piece.Color == Color.White)
+                if (piece.Color == Color.Red)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.Write($"{piece}");

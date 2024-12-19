@@ -10,7 +10,7 @@ namespace Boards
     {
         public Position Position { get; set; }
         public Color Color { get; protected set; }
-        public int QtyMoves { get; protected set;}
+        public int CountMoves { get; protected set;}
         public Board Board { get; protected set; }
 
         public Piece(Board board, Color color)
@@ -18,12 +18,17 @@ namespace Boards
             this.Position = null;
             this.Board = board;
             this.Color = color;
-            this.QtyMoves = 0;
+            this.CountMoves = 0;
         }
         
-        public void nMovesUpdate()
+        public void IncreaseCountMoves()
         {
-            this.QtyMoves++; 
+            this.CountMoves++; 
+        }
+
+        public void DecreaseCountMoves()
+        {
+            this.CountMoves--;
         }
 
         public bool AreTherePossibleMoves()

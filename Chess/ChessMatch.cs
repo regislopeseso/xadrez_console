@@ -10,20 +10,63 @@ namespace Chess
         public bool IsFinished { get; private set; }
         private HashSet<Piece> Pieces;
         private HashSet<Piece> Captured;
+        public bool Check { get; private set; }
 
         public ChessMatch()
         {
             this.Board = new Board(8, 8);
             this.Turn = 1;
-            this.CurrentPlayer = Color.White;
+            this.CurrentPlayer = Color.Red;
             this.IsFinished = false;
+            this.Check = false;
             this.Pieces = new HashSet<Piece>();
             this.Captured = new HashSet<Piece>();
             PlacePieces();
         }
+        public Piece ExecuteMove(Position origin, Position target)
+        {
+            Piece p = Board.RemovePiece(origin);
+            p.IncreaseCountMoves();
+            Piece pieceCaptured = Board.RemovePiece(target);
+            Board.PlacePiece(p, target);
+            if (pieceCaptured != null)
+            {
+                Captured.Add(pieceCaptured);
+            }
+            return pieceCaptured;
+        }
+        public void UndoMove(Position origin, Position target, Piece pieceCaptured)
+        {
+            Piece p = Board.RemovePiece(target);
+            p.DecreaseCountMoves();
+            if (pieceCaptured != null)
+            {
+               Board.PlacePiece(p, origin);
+               
+               Captured.Remove(pieceCaptured);
+            }
+            Board.PlacePiece(p, origin);
+
+        }
         public void Play(Position origin, Position target) //"realizaJogada"
         {
-            ExecuteMove(origin, target);
+            Piece pieceCaptured = ExecuteMove(origin, target);
+
+            if(IsInCheck(CurrentPlayer) == true)
+            {
+                UndoMove(origin, target,  pieceCaptured);
+                throw new BoardException("You are not allowed to place yourself into check!");
+            }
+       
+            if( IsInCheck(Opponent(CurrentPlayer) ) == true)
+            {
+                this.Check = true;
+            }
+            else
+            {
+                this.Check = false;
+            }
+
             this.Turn++;
             ChangePlayer();
         }
@@ -53,24 +96,13 @@ namespace Chess
         }
         private void ChangePlayer()
         {
-            if (this.CurrentPlayer == Color.White)
+            if (this.CurrentPlayer == Color.Red)
             {
-                this.CurrentPlayer = Color.Black;
+                this.CurrentPlayer = Color.Yellow;
             }
             else
             {
-                this.CurrentPlayer = Color.White;
-            }
-        }
-        public void ExecuteMove(Position origin, Position target)
-        {
-            Piece p = Board.RemovePiece(origin);
-            p.nMovesUpdate();
-            Piece pieceCaptured = Board.RemovePiece(target);
-            Board.PlacePiece(p, target);
-            if (pieceCaptured != null)
-            {
-                Captured.Add(pieceCaptured);
+                this.CurrentPlayer = Color.Red;
             }
         }
         public HashSet<Piece> CapturedPieces(Color color)
@@ -88,7 +120,7 @@ namespace Chess
         public HashSet<Piece> PiecesInPlay(Color color)
         {
             HashSet<Piece> aux = new HashSet<Piece>();
-            foreach (var piece in Captured)
+            foreach (var piece in Pieces)
             {
                 if (piece.Color == color)
                 {
@@ -99,6 +131,47 @@ namespace Chess
             return aux;
 
         }
+        private Color Opponent(Color color)
+        {
+            if (color == Color.Red)
+            {
+                return Color.Yellow;
+            }
+            else
+            {
+                return Color.Red;
+            }
+        }
+        private Piece WhichKing(Color color)
+        {
+            foreach (var piece in PiecesInPlay(color))
+            {         
+                if (piece is King)
+                {
+                    return piece;
+                }
+            }
+            return null;
+        }
+        public bool IsInCheck(Color color)
+        {
+            var king = WhichKing(color);
+
+            if (king == null)
+            {
+                throw new BoardException($"There is no {color} King on the board!");
+            }
+
+            foreach (var piece in PiecesInPlay(Opponent(color)))
+            {
+                bool[,] mat = piece.PossibleMoves();
+                if ((mat[king.Position.Line, king.Position.Column]) == true)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public void PlaceNewPiece(char column, int line, Piece piece)
         {
             Board.PlacePiece(piece, new ChessPosition(column, line).ConvertPosition());
@@ -106,43 +179,58 @@ namespace Chess
         }
         public void PlacePieces()
         {
-            //Placing all white pieces for a new match. . .
-            PlaceNewPiece('a', 3, new Rook(Board, Color.White));
-            PlaceNewPiece('b', 1, new Knight(Board, Color.White));
-            PlaceNewPiece('c', 1, new Bishop(Board, Color.White));
-            PlaceNewPiece('d', 1, new Queen(Board, Color.White));
-            PlaceNewPiece('e', 1, new King(Board, Color.White));
-            PlaceNewPiece('f', 1, new Bishop(Board, Color.White));
-            PlaceNewPiece('g', 1, new Knight(Board, Color.White));
-            PlaceNewPiece('h', 1, new Rook(Board, Color.White));
+            /*
+            //Placing all red pieces for a new match. . .
+            PlaceNewPiece('a', 3, new Rook(Board, Color.Red));
+            PlaceNewPiece('b', 1, new Knight(Board, Color.Red));
+            PlaceNewPiece('c', 1, new Bishop(Board, Color.Red));
+            PlaceNewPiece('d', 1, new Queen(Board, Color.Red));
+            PlaceNewPiece('e', 1, new King(Board, Color.Red));
+            PlaceNewPiece('f', 1, new Bishop(Board, Color.Red));
+            PlaceNewPiece('g', 1, new Knight(Board, Color.Red));
+            PlaceNewPiece('h', 1, new Rook(Board, Color.Red));
 
-            PlaceNewPiece('a', 2, new Pawn(Board, Color.White));
-            PlaceNewPiece('b', 2, new Pawn(Board, Color.White));
-            PlaceNewPiece('c', 2, new Pawn(Board, Color.White));
-            PlaceNewPiece('d', 2, new Pawn(Board, Color.White));
-            PlaceNewPiece('e', 2, new Pawn(Board, Color.White));
-            PlaceNewPiece('f', 2, new Pawn(Board, Color.White));
-            PlaceNewPiece('g', 2, new Pawn(Board, Color.White));
-            PlaceNewPiece('h', 2, new Pawn(Board, Color.White));
+            PlaceNewPiece('a', 2, new Pawn(Board, Color.Red));
+            PlaceNewPiece('b', 2, new Pawn(Board, Color.Red));
+            PlaceNewPiece('c', 2, new Pawn(Board, Color.Red));
+            PlaceNewPiece('d', 2, new Pawn(Board, Color.Red));
+            PlaceNewPiece('e', 2, new Pawn(Board, Color.Red));
+            PlaceNewPiece('f', 2, new Pawn(Board, Color.Red));
+            PlaceNewPiece('g', 2, new Pawn(Board, Color.Red));
+            PlaceNewPiece('h', 2, new Pawn(Board, Color.Red));
 
-            //Placing all black pieces for a new match...
-            PlaceNewPiece('a', 8, new Rook(Board, Color.Black));
-            PlaceNewPiece('b', 8, new Knight(Board, Color.Black));
-            PlaceNewPiece('c', 8, new Bishop(Board, Color.Black));
-            PlaceNewPiece('d', 8, new Queen(Board, Color.Black));
-            PlaceNewPiece('e', 8, new King(Board, Color.Black));
-            PlaceNewPiece('f', 8, new Bishop(Board, Color.Black));
-            PlaceNewPiece('g', 8, new Knight(Board, Color.Black));
-            PlaceNewPiece('h', 6, new Rook(Board, Color.Black));
+            //Placing all yellow pieces for a new match...
+            PlaceNewPiece('a', 8, new Rook(Board, Color.Yellow));
+            PlaceNewPiece('b', 8, new Knight(Board, Color.Yellow));
+            PlaceNewPiece('c', 8, new Bishop(Board, Color.Yellow));
+            PlaceNewPiece('d', 8, new Queen(Board, Color.Yellow));
+            PlaceNewPiece('e', 8, new King(Board, Color.Yellow));
+            PlaceNewPiece('f', 8, new Bishop(Board, Color.Yellow));
+            PlaceNewPiece('g', 8, new Knight(Board, Color.Yellow));
+            PlaceNewPiece('h', 6, new Rook(Board, Color.Yellow));
 
-            PlaceNewPiece('a', 7, new Pawn(Board, Color.Black));
-            PlaceNewPiece('b', 7, new Pawn(Board, Color.Black));
-            PlaceNewPiece('c', 7, new Pawn(Board, Color.Black));
-            PlaceNewPiece('d', 7, new Pawn(Board, Color.Black));
-            PlaceNewPiece('e', 7, new Pawn(Board, Color.Black));
-            PlaceNewPiece('f', 7, new Pawn(Board, Color.Black));
-            PlaceNewPiece('g', 7, new Pawn(Board, Color.Black));
-            PlaceNewPiece('h', 7, new Pawn(Board, Color.Black));
+            PlaceNewPiece('a', 7, new Pawn(Board, Color.Yellow));
+            PlaceNewPiece('b', 7, new Pawn(Board, Color.Yellow));
+            PlaceNewPiece('c', 7, new Pawn(Board, Color.Yellow));
+            PlaceNewPiece('d', 7, new Pawn(Board, Color.Yellow));
+            PlaceNewPiece('e', 7, new Pawn(Board, Color.Yellow));
+            PlaceNewPiece('f', 7, new Pawn(Board, Color.Yellow));
+            PlaceNewPiece('g', 7, new Pawn(Board, Color.Yellow));
+            PlaceNewPiece('h', 7, new Pawn(Board, Color.Yellow));
+            */
+            PlaceNewPiece('c', 1, new Rook(Board, Color.Red));
+            PlaceNewPiece('c', 2, new Rook(Board, Color.Red));
+            PlaceNewPiece('d', 2, new Rook(Board, Color.Red));
+            PlaceNewPiece('e', 2, new Rook(Board, Color.Red));
+            PlaceNewPiece('e', 1, new Rook(Board, Color.Red));
+            PlaceNewPiece('d', 1, new King(Board, Color.Red));
+
+            PlaceNewPiece('c', 7, new Rook(Board, Color.Yellow));
+            PlaceNewPiece('c', 8, new Rook(Board, Color.Yellow));
+            PlaceNewPiece('d', 7, new Rook(Board, Color.Yellow));
+            PlaceNewPiece('e', 7, new Rook(Board, Color.Yellow));
+            PlaceNewPiece('e', 8, new Rook(Board, Color.Yellow));
+            PlaceNewPiece('d', 8, new King(Board, Color.Yellow));
         }
     }
 }
