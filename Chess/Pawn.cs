@@ -1,12 +1,14 @@
 ﻿using Boards;
 
-
 namespace Chess
 {
     public class Pawn : Piece
-    {
-        public Pawn(Board board, Color color) : base(board, color)
+    {            
+        private ChessMatch CurrentMatch;
+
+        public Pawn(Board board, Color color, ChessMatch currentMatch) : base(board, color)
         {
+            this.CurrentMatch = currentMatch;
         }
 
         public override string ToString()
@@ -33,6 +35,7 @@ namespace Chess
             Position pos = new Position(0, 0);
 
             #region Movements
+            #region Red Pieces
             if (Color == Color.Red)
             {
                 pos.DefineValues(Position.Line - 1, Position.Column);
@@ -59,7 +62,27 @@ namespace Chess
                 {
                     mat[pos.Line, pos.Column] = true;
                 }
+
+                #region EN PASSANT (Special Move)
+                if(Position.Line == 3)
+                {
+                    Position onTheLeft = new Position(Position.Line, Position.Column - 1);
+                    if (Board.PositionIsValid(onTheLeft) == true && IsOpponentThere(onTheLeft) && Board.Piece(onTheLeft) == this.CurrentMatch.VulnerableToEnPassant)
+                    {
+                        mat[onTheLeft.Line - 1, onTheLeft.Column] = true;
+                    }
+
+                    Position onTheRight = new Position(Position.Line, Position.Column + 1);
+                    if (Board.PositionIsValid(onTheRight) == true && IsOpponentThere(onTheRight) && Board.Piece(onTheRight) == this.CurrentMatch.VulnerableToEnPassant)
+                    {
+                        mat[onTheRight.Line - 1, onTheRight.Column] = true;
+                    }
+                }
+                #endregion
             }
+            #endregion
+
+            #region Yellow Pieces
             else
             {
                 pos.DefineValues(Position.Line + 1, Position.Column);
@@ -86,9 +109,26 @@ namespace Chess
                 {
                     mat[pos.Line, pos.Column] = true;
                 }
+
+                #region EN PASSANT (Special Move)
+                if (Position.Line == 4)
+                {
+                    Position onTheLeft = new Position(Position.Line, Position.Column - 1);
+                    if (Board.PositionIsValid(onTheLeft) == true && IsOpponentThere(onTheLeft) && Board.Piece(onTheLeft) == this.CurrentMatch.VulnerableToEnPassant)
+                    {
+                        mat[onTheLeft.Line + 1, onTheLeft.Column] = true;
+                    }
+
+                    Position onTheRight = new Position(Position.Line, Position.Column + 1);
+                    if (Board.PositionIsValid(onTheRight) == true && IsOpponentThere(onTheRight) && Board.Piece(onTheRight) == this.CurrentMatch.VulnerableToEnPassant)
+                    {
+                        mat[onTheRight.Line + 1, onTheRight.Column] = true;
+                    }
+                }
+                #endregion
             }
             #endregion
-
+            #endregion
             return mat;
         }
     }
