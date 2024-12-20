@@ -9,74 +9,73 @@ namespace Chess
         {
         }
 
-
         public override string ToString()
         {
-            return "T";
+            return "B";
         }
+
         private bool IsSpotFree(Position pos)
         {
             Piece p = Board.Piece(pos);
             return p == null || p.Color != this.Color;
         }
-
-        #region A seguinte regra de movimento é para Reis, portanto deve ser corrigida!
+   
         public override bool[,] PossibleMoves()
         {
             bool[,] mat = new bool[Board.Lines, Board.Columns];
 
             Position pos = new Position(0, 0);
 
-            //north direction
-            pos.DefineValues(Position.Line - 1, Position.Column);
-            if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
-            {
-                mat[pos.Line, pos.Column] = true;
-            }
-            //northeast direction
+            #region (NE) Northeast direction
             pos.DefineValues(Position.Line - 1, Position.Column + 1);
-            if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
+            while (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
             {
                 mat[pos.Line, pos.Column] = true;
+                if (Board.Piece(pos) != null && Board.Piece(pos).Color != this.Color )
+                {
+                    break;                  
+                }
+                pos.DefineValues(pos.Line - 1, pos.Column + 1);
             }
-            //east direction
-            pos.DefineValues(Position.Line, Position.Column + 1);
-            if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
-            {
-                mat[pos.Line, pos.Column] = true;
-            }
-            //southeast direction
+            #endregion
+            #region (SE) Southeast direction
             pos.DefineValues(Position.Line + 1, Position.Column + 1);
-            if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
+            while (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
             {
                 mat[pos.Line, pos.Column] = true;
+                if (Board.Piece(pos) != null && Board.Piece(pos).Color != this.Color)
+                {
+                    break;
+                }
+                pos.DefineValues(pos.Line + 1, pos.Column + 1);
             }
-            //south direction
-            pos.DefineValues(Position.Line + 1, Position.Column);
-            if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
-            {
-                mat[pos.Line, pos.Column] = true;
-            }
-            //southwest direction
+            #endregion
+            #region (SW) Southwest direction
             pos.DefineValues(Position.Line + 1, Position.Column - 1);
-            if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
+            while (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
             {
                 mat[pos.Line, pos.Column] = true;
+                if (Board.Piece(pos) != null && Board.Piece(pos).Color != this.Color)
+                {
+                    break;
+                }
+                pos.DefineValues(pos.Line + 1, pos.Column - 1);
             }
-            //west direction
-            pos.DefineValues(Position.Line, Position.Column - 1);
-            if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
-            {
-                mat[pos.Line, pos.Column] = true;
-            }
-            //northwest direction
+            #endregion
+            #region (NW) Northwest direction
             pos.DefineValues(Position.Line - 1, Position.Column - 1);
-            if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
+            while (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
             {
                 mat[pos.Line, pos.Column] = true;
+                if (Board.Piece(pos) != null && Board.Piece(pos).Color != this.Color)
+                {
+                    break;
+                }
+                pos.DefineValues(pos.Line - 1, pos.Column - 1);
             }
+            #endregion  
+
             return mat;
-        }
-        #endregion
+        }        
     }
 }

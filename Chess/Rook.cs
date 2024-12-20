@@ -24,8 +24,8 @@ namespace Chess
             bool[,] mat = new bool[Board.Lines, Board.Columns];
 
             Position pos = new Position(0, 0);
-            
-            //North direction
+
+            #region (N) North direction
             pos.DefineValues(Position.Line - 1, Position.Column);
             while (Board.PositionIsValid(pos) && IsSpotFree(pos))
             {
@@ -36,7 +36,8 @@ namespace Chess
                 }
                 pos.Line = pos.Line - 1;
             }
-            //South direction
+            #endregion
+            #region (S) South direction
             pos.DefineValues(Position.Line + 1, Position.Column);
             while (Board.PositionIsValid(pos) && IsSpotFree(pos))
             {
@@ -47,7 +48,8 @@ namespace Chess
                 }
                 pos.Line = pos.Line + 1;
             }
-            //East direction
+            #endregion
+            #region (E) East direction
             pos.DefineValues(Position.Line, Position.Column + 1);
             while (Board.PositionIsValid(pos) && IsSpotFree(pos))
             {
@@ -58,7 +60,8 @@ namespace Chess
                 }
                 pos.Column = pos.Column + 1;
             }
-            //West direction
+            #endregion
+            #region (W) West direction
             pos.DefineValues(Position.Line, Position.Column - 1);
             while (Board.PositionIsValid(pos) && IsSpotFree(pos))
             {
@@ -69,6 +72,7 @@ namespace Chess
                 }
                 pos.Column = pos.Column - 1;
             }
+            #endregion
 
             return mat;
         }

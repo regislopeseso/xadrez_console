@@ -72,6 +72,5 @@ namespace Boards
                 throw new BoardException("Invalid position!");
             }
         }
-
     }
 }

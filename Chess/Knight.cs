@@ -19,64 +19,81 @@ namespace Chess
             Piece p = Board.Piece(pos);
             return p == null || p.Color != this.Color;
         }
-
-        #region A seguinte regra de movimento é para Reis, portanto deve ser corrigida!
+        
         public override bool[,] PossibleMoves()
         {
             bool[,] mat = new bool[Board.Lines, Board.Columns];
 
             Position pos = new Position(0, 0);
 
-            //north direction
-            pos.DefineValues(Position.Line - 1, Position.Column);
+            #region L simple upward right
+            pos.DefineValues(Position.Line + 1, Position.Column + 2);
             if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
             {
                 mat[pos.Line, pos.Column] = true;
             }
-            //northeast direction
-            pos.DefineValues(Position.Line - 1, Position.Column + 1);
+            #endregion
+            
+            #region L double upward right
+            pos.DefineValues(Position.Line + 2, Position.Column + 1);
             if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
             {
                 mat[pos.Line, pos.Column] = true;
             }
-            //east direction
-            pos.DefineValues(Position.Line, Position.Column + 1);
+            #endregion
+            
+            
+            #region L simple downward right
+            pos.DefineValues(Position.Line - 1, Position.Column + 2);
             if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
             {
                 mat[pos.Line, pos.Column] = true;
             }
-            //southeast direction
-            pos.DefineValues(Position.Line + 1, Position.Column + 1);
+            #endregion
+            
+            #region L double downward right
+            pos.DefineValues(Position.Line - 2, Position.Column + 1);
             if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
             {
                 mat[pos.Line, pos.Column] = true;
             }
-            //south direction
-            pos.DefineValues(Position.Line + 1, Position.Column);
+            #endregion
+           
+
+            #region L simple downward left
+            pos.DefineValues(Position.Line - 1, Position.Column - 2);
+            if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true) 
+            {
+                mat[pos.Line, pos.Column] = true;                    
+            }
+            #endregion
+            
+            #region L double downward left
+            pos.DefineValues(Position.Line - 2, Position.Column - 1);
             if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
             {
                 mat[pos.Line, pos.Column] = true;
             }
-            //southwest direction
-            pos.DefineValues(Position.Line + 1, Position.Column - 1);
+            #endregion
+
+
+            #region L simple upward left
+            pos.DefineValues(Position.Line + 2, Position.Column - 1);
             if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
             {
                 mat[pos.Line, pos.Column] = true;
             }
-            //west direction
-            pos.DefineValues(Position.Line, Position.Column - 1);
+            #endregion
+            
+            #region L double upward left
+            pos.DefineValues(Position.Line + 1, Position.Column - 2);
             if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
             {
                 mat[pos.Line, pos.Column] = true;
             }
-            //northwest direction
-            pos.DefineValues(Position.Line - 1, Position.Column - 1);
-            if (Board.PositionIsValid(pos) == true && IsSpotFree(pos) == true)
-            {
-                mat[pos.Line, pos.Column] = true;
-            }
+            #endregion
+            
             return mat;
-        }
-        #endregion
+        }    
     }
 }
