@@ -35,6 +35,29 @@ namespace Chess
             {
                 Captured.Add(pieceCaptured);
             }
+
+            #region Castling (Special Move)
+            //Small Castling
+            if (p is King && target.Column == origin.Column + 2)
+            {
+                Position rookOriginPosition = new Position(origin.Line, origin.Column + 3);
+                Position rookTargetPosition = new Position(origin.Line, origin.Column + 1);
+                Piece R = Board.RemovePiece(rookOriginPosition);
+                R.IncreaseCountMoves();
+                Board.PlacePiece(R, rookTargetPosition);
+            }
+
+            //Big Castling
+            if (p is King && target.Column == origin.Column - 2)
+            {
+                Position rookOriginPosition = new Position(origin.Line, origin.Column - 4);
+                Position rookTargetPosition = new Position(origin.Line, origin.Column - 1);
+                Piece R = Board.RemovePiece(rookOriginPosition);
+                R.IncreaseCountMoves();
+                Board.PlacePiece(R, rookTargetPosition);
+            }
+            #endregion
+
             return pieceCaptured;
         }
         public void UndoMove(Position origin, Position target, Piece pieceCaptured)
@@ -48,6 +71,27 @@ namespace Chess
                 Captured.Remove(pieceCaptured);
             }
             Board.PlacePiece(p, origin);
+
+            #region Undo Castling (Special Move)
+            //Small Castling
+            if (p is King && target.Column == origin.Column + 2)
+            {
+                Position rookOriginPosition = new Position(origin.Line, origin.Column + 3);
+                Position rookTargetPosition = new Position(origin.Line, origin.Column + 1);
+                Piece R = Board.RemovePiece(rookTargetPosition);
+                R.DecreaseCountMoves();
+                Board.PlacePiece(R, rookOriginPosition);
+            }
+            //Big Castling
+            if (p is King && target.Column == origin.Column - 2)
+            {
+                Position rookOriginPosition = new Position(origin.Line, origin.Column - 4);
+                Position rookTargetPosition = new Position(origin.Line, origin.Column - 1);
+                Piece R = Board.RemovePiece(rookTargetPosition);
+                R.DecreaseCountMoves();
+                Board.PlacePiece(R, rookOriginPosition);
+            }
+            #endregion
 
         }
         public void Play(Position origin, Position target) //"realizaJogada"
@@ -219,13 +263,13 @@ namespace Chess
         }
         public void PlacePieces()
         {
-            
+
             //Placing all red pieces for a new match. . .
             PlaceNewPiece('a', 3, new Rook(Board, Color.Red));
             PlaceNewPiece('b', 1, new Knight(Board, Color.Red));
             PlaceNewPiece('c', 1, new Bishop(Board, Color.Red));
             PlaceNewPiece('d', 1, new Queen(Board, Color.Red));
-            PlaceNewPiece('e', 1, new King(Board, Color.Red));
+            PlaceNewPiece('e', 1, new King(Board, Color.Red, this));
             PlaceNewPiece('f', 1, new Bishop(Board, Color.Red));
             PlaceNewPiece('g', 1, new Knight(Board, Color.Red));
             PlaceNewPiece('h', 1, new Rook(Board, Color.Red));
@@ -244,7 +288,7 @@ namespace Chess
             PlaceNewPiece('b', 8, new Knight(Board, Color.Yellow));
             PlaceNewPiece('c', 8, new Bishop(Board, Color.Yellow));
             PlaceNewPiece('d', 8, new Queen(Board, Color.Yellow));
-            PlaceNewPiece('e', 8, new King(Board, Color.Yellow));
+            PlaceNewPiece('e', 8, new King(Board, Color.Yellow, this));
             PlaceNewPiece('f', 8, new Bishop(Board, Color.Yellow));
             PlaceNewPiece('g', 8, new Knight(Board, Color.Yellow));
             PlaceNewPiece('h', 6, new Rook(Board, Color.Yellow));
@@ -257,7 +301,7 @@ namespace Chess
             PlaceNewPiece('f', 7, new Pawn(Board, Color.Yellow));
             PlaceNewPiece('g', 7, new Pawn(Board, Color.Yellow));
             PlaceNewPiece('h', 7, new Pawn(Board, Color.Yellow));
-            
+
 
             //Testing Check
             //PlaceNewPiece('c', 1, new Rook(Board, Color.Red));
@@ -273,7 +317,7 @@ namespace Chess
             //PlaceNewPiece('e', 7, new Rook(Board, Color.Yellow));
             //PlaceNewPiece('e', 8, new Rook(Board, Color.Yellow));
             //PlaceNewPiece('d', 8, new King(Board, Color.Yellow));
-            
+
 
             ////Testing CHECKMATE
             //PlaceNewPiece('c', 1, new Rook(Board, Color.Red));
@@ -287,17 +331,17 @@ namespace Chess
             ////Testing the Knight            
             //PlaceNewPiece('d', 4, new Knight(Board, Color.Red));
             //PlaceNewPiece('a', 8, new Pawn(Board, Color.Yellow));
-            
+
 
             ////Testing the Bishop            
             //PlaceNewPiece('d', 4, new Bishop(Board, Color.Red));
             //PlaceNewPiece('a', 8, new Pawn(Board, Color.Yellow));
-            
+
 
             ////Testing the Queen
             //PlaceNewPiece('d', 4, new Queen(Board, Color.Red));
             //PlaceNewPiece('a', 8, new Pawn(Board, Color.Yellow));
-            
+
 
             ////Testing the Pawns            
             //PlaceNewPiece('d', 2, new Pawn(Board, Color.Red));
@@ -305,7 +349,7 @@ namespace Chess
             //PlaceNewPiece('a', 1, new King(Board, Color.Red));
             //PlaceNewPiece('d', 5, new Pawn(Board, Color.Yellow));
             //PlaceNewPiece('h', 8, new King(Board, Color.Yellow));
-            
+
         }
     }
 }
